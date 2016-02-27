@@ -79,9 +79,9 @@ void Window::writeSettings() {
 
 QString Window::findGPGLocation() {
     QProcess p;
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
     p.start("where", QStringList() << "gpg");
-#elif Q_OS_UNIX
+#elif defined(Q_OS_UNIX)
     p.start("whereis", QStringList() << "gpg");
 #else
     qDebug() << "Unknown architecture!";
