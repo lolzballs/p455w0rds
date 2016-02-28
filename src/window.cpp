@@ -88,7 +88,7 @@ QString Window::findGPGLocation() {
     return "";
 #endif
     if (!p.waitForStarted()) {
-        qDebug() << "Unable to start where/whereis not started!";
+        qCritical("Unable to start where/whereis not started!");
     }
 
     p.waitForFinished();
@@ -99,7 +99,7 @@ QString Window::decrypt(QString file) {
     QProcess p;
     p.start(gpgexe, QStringList() << "--decrypt" << file);
     if (!p.waitForStarted()) {
-        qDebug() << "Failed to start gpg";
+        qFatal("Failed to start gpg");
     }
 
     p.waitForFinished();
@@ -110,7 +110,7 @@ QString Window::encrypt(QString pass) {
     QProcess p;
     p.start(gpgexe, QStringList() << "--encrypt" << "--armor" << "-r" << gpguser);
     if (!p.waitForStarted()) {
-        qDebug() << "Failed to start gpg";
+        qFatal("Failed to start gpg");
     }
     p.write(pass.toUtf8());
     p.closeWriteChannel();

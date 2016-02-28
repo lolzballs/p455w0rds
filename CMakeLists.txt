@@ -5,7 +5,13 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-set(SOURCE src/main.cpp src/window.cpp src/window.h src/new_password_dialog.cpp src/new_password_dialog.h)
+set(SOURCE
+        src/main.cpp
+        src/window.cpp
+        src/window.h
+        src/new_password_dialog.cpp
+        src/new_password_dialog.h
+        )
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Core REQUIRED)
