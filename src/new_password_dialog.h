@@ -2,7 +2,7 @@
 
 #include <QDialog>
 #include <QLineEdit>
-#include <QtWidgets/qdialogbuttonbox.h>
+#include <QDialogButtonBox>
 
 class NewPasswordDialog : public QDialog {
     Q_OBJECT

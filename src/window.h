@@ -2,7 +2,6 @@
 
 #include <QMainWindow>
 #include <QMenu>
-#include <QDir>
 #include <QListView>
 #include <QFileSystemModel>
 #include <QTextEdit>
@@ -18,10 +17,6 @@ protected:
     void closeEvent(QCloseEvent*) Q_DECL_OVERRIDE;
 
 private:
-    QDir passdir;
-    QString gpgexe;
-    QString gpguser;
-
     QFileSystemModel* fileModel;
 
     QSplitter* content;
@@ -39,10 +34,6 @@ private:
     void createActions();
     void createMenus();
 
-    void readSettings();
-    void writeSettings();
-
-    QString findGPGLocation();
     QString decrypt(QString file);
     QString encrypt(QString pass);
 

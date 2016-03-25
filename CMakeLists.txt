@@ -9,8 +9,12 @@ set(SOURCE
         src/main.cpp
         src/window.cpp
         src/window.h
+        src/settings.cpp
+        src/settings.h
         src/new_password_dialog.cpp
         src/new_password_dialog.h
+        src/settings_dialog.cpp
+        src/settings_dialog.h
         )
 
 find_package(Qt5Widgets REQUIRED)

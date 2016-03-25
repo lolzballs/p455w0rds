@@ -4,7 +4,7 @@
 
 NewPasswordDialog::NewPasswordDialog(QWidget* parent) : QDialog(parent) {
     setWindowTitle("New Password");
-    QFormLayout* mainLayout = new QFormLayout();
+    QFormLayout* mainLayout = new QFormLayout;
     setLayout(mainLayout);
 
     editName = new QLineEdit;

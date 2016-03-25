@@ -1,8 +1,9 @@
 #include "window.h"
 #include "new_password_dialog.h"
+#include "settings_dialog.h"
+#include "settings.h"
 
 #include <QDebug>
-#include <QSettings>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QProcess>
@@ -18,14 +19,15 @@ Window::Window() {
     createActions();
     createMenus();
 
-    readSettings();
+    Settings& settings = Settings::getInstance();
+    settings.readSettings();
 
-    qDebug() << "Passwords directory: " + passdir.path();
+    qDebug() << "Passwords directory: " + settings.passdir;
 
     fileModel = new QFileSystemModel(this);
     fileModel->setFilter(QDir::Files);
     fileModel->setNameFilters(QStringList("*.p455"));
-    QModelIndex root = fileModel->setRootPath(passdir.path());
+    QModelIndex root = fileModel->setRootPath(settings.passdir);
 
     fileList = new QListView(this);
     fileList->setModel(fileModel);
@@ -59,46 +61,9 @@ void Window::createMenus() {
     menuHelp->addAction(actAbout);
 }
 
-void Window::readSettings() {
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "p455w0rds");
-    passdir = QDir(settings.value("directory", QDir::home().filePath("Documents/p455w0rds")).toString());
-    QString path = settings.value("gpgexecutable").toString();
-    if (path.isEmpty()) {
-        gpgexe = findGPGLocation();
-    } else {
-        gpgexe = path;
-    }
-    gpguser = settings.value("gpguser").toString();
-}
-
-void Window::writeSettings() {
-    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "p455w0rds");
-    settings.setValue("directory", passdir.path());
-    settings.setValue("gpgexecutable", gpgexe);
-    settings.setValue("gpguser", gpguser);
-}
-
-QString Window::findGPGLocation() {
-    QProcess p;
-#if defined(Q_OS_WIN)
-    p.start("where", QStringList() << "gpg");
-#elif defined(Q_OS_UNIX)
-    p.start("whereis", QStringList() << "gpg");
-#else
-    qDebug() << "Unknown architecture!";
-    return "";
-#endif
-    if (!p.waitForStarted()) {
-        qCritical("Unable to start where/whereis not started!");
-    }
-
-    p.waitForFinished();
-    return p.readAllStandardOutput().simplified();
-}
-
 QString Window::decrypt(QString file) {
     QProcess p;
-    p.start(gpgexe, QStringList() << "--decrypt" << file);
+    p.start(Settings::getInstance().gpgexe, QStringList() << "--decrypt" << file);
     if (!p.waitForStarted()) {
         qFatal("Failed to start gpg");
     }
@@ -109,7 +74,7 @@ QString Window::decrypt(QString file) {
 
 QString Window::encrypt(QString pass) {
     QProcess p;
-    p.start(gpgexe, QStringList() << "--encrypt" << "--armor" << "-r" << gpguser);
+    p.start(Settings::getInstance().gpgexe, QStringList() << "--encrypt" << "--armor" << "-r" << Settings::getInstance().gpguser);
     if (!p.waitForStarted()) {
         qFatal("Failed to start gpg");
     }
@@ -121,13 +86,13 @@ QString Window::encrypt(QString pass) {
 }
 
 void Window::fileClicked(const QModelIndex& index) {
-    QString file = passdir.filePath(fileModel->data(index).toString());
+    QString file = QDir(Settings::getInstance().passdir).filePath(fileModel->data(index).toString());
     fileView->setEnabled(true);
     fileView->setText(decrypt(file));
 }
 
 void Window::closeEvent(QCloseEvent*) {
-    writeSettings();
+    Settings::getInstance().writeSettings();
 }
 
 void Window::about() {
@@ -136,7 +101,8 @@ void Window::about() {
 
 void Window::openSettings()
 {
-
+    SettingsDialog dialog;
+    dialog.exec();
 }
 
 void Window::newPass() {
@@ -146,7 +112,7 @@ void Window::newPass() {
         QString pass = dialog.getPass();
         QString encrypted = encrypt(pass);
 
-        QFile file(passdir.filePath(name + ".p455"));
+        QFile file(QDir(Settings::getInstance().passdir).filePath(name + ".p455"));
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
             qDebug() << "Failed to open: " + file.fileName();
             return;
