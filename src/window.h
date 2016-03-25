@@ -33,6 +33,7 @@ private:
 
     QAction* actAbout;
     QAction* actNew;
+    QAction* actSettings;
     QAction* actExit;
 
     void createActions();
@@ -49,5 +50,6 @@ private slots:
     void fileClicked(const QModelIndex& index);
 
     void about();
+    void openSettings();
     void newPass();
 };

@@ -44,6 +44,8 @@ void Window::createActions() {
     connect(actAbout, &QAction::triggered, this, &Window::about);
     actNew = new QAction("New", this);
     connect(actNew, &QAction::triggered, this, &Window::newPass);
+    actSettings = new QAction("Settings", this);
+    connect(actSettings, &QAction::triggered, this, &Window::openSettings);
     actExit = new QAction("Exit", this);
     connect(actExit, &QAction::triggered, this, &Window::close);
 }
@@ -51,6 +53,7 @@ void Window::createActions() {
 void Window::createMenus() {
     menuFile = menuBar()->addMenu("File");
     menuFile->addAction(actNew);
+    menuFile->addAction(actSettings);
     menuFile->addAction(actExit);
     menuHelp = menuBar()->addMenu("Help");
     menuHelp->addAction(actAbout);
@@ -129,6 +132,11 @@ void Window::closeEvent(QCloseEvent*) {
 
 void Window::about() {
     QMessageBox::about(this, "About", "<b>p455w0rds</b> is an application written in Qt to GPG encrypt passwords for storage.");
+}
+
+void Window::openSettings()
+{
+
 }
 
 void Window::newPass() {

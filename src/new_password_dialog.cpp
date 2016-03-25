@@ -4,7 +4,8 @@
 
 NewPasswordDialog::NewPasswordDialog(QWidget* parent) : QDialog(parent) {
     setWindowTitle("New Password");
-    QFormLayout* mainLayout = new QFormLayout(this);
+    QFormLayout* mainLayout = new QFormLayout();
+    setLayout(mainLayout);
 
     editName = new QLineEdit;
     mainLayout->addRow("Name:", editName);
@@ -15,8 +16,8 @@ NewPasswordDialog::NewPasswordDialog(QWidget* parent) : QDialog(parent) {
 
     btnBox = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Cancel);
     mainLayout->addRow(btnBox);
-    connect(btnBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(btnBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(btnBox, &QDialogButtonBox::accepted, this, &NewPasswordDialog::accept);
+    connect(btnBox, &QDialogButtonBox::rejected, this, &NewPasswordDialog::reject);
 }
 
 void NewPasswordDialog::accept() {
