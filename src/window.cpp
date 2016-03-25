@@ -3,8 +3,6 @@
 
 #include <QDebug>
 #include <QSettings>
-#include <QVBoxLayout>
-#include <QPushButton>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QProcess>
@@ -32,7 +30,7 @@ Window::Window() {
     fileList = new QListView(this);
     fileList->setModel(fileModel);
     fileList->setRootIndex(root);
-    connect(fileList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(fileClicked(const QModelIndex&)));
+    connect(fileList, &QListView::doubleClicked, this, &Window::fileClicked);
     content->addWidget(fileList);
 
     fileView = new QTextEdit(this);
@@ -43,11 +41,11 @@ Window::Window() {
 
 void Window::createActions() {
     actAbout = new QAction("About", this);
-    connect(actAbout, SIGNAL(triggered()), this, SLOT(about()));
+    connect(actAbout, &QAction::triggered, this, &Window::about);
     actNew = new QAction("New", this);
-    connect(actNew, SIGNAL(triggered()), this, SLOT(newPass()));
+    connect(actNew, &QAction::triggered, this, &Window::newPass);
     actExit = new QAction("Exit", this);
-    connect(actExit, SIGNAL(triggered()), this, SLOT(close()));
+    connect(actExit, &QAction::triggered, this, &Window::close);
 }
 
 void Window::createMenus() {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QDialog>
-#include <QLabel>
 #include <QLineEdit>
 #include <QtWidgets/qdialogbuttonbox.h>
 
@@ -10,8 +9,8 @@ class NewPasswordDialog : public QDialog {
 
 public:
     NewPasswordDialog(QWidget* parent = 0);
-    QString getName() { return name; };
-    QString getPass() { return pass; };
+    QString getName() const { return name; };
+    QString getPass() const { return pass; };
 
 public slots:
     void accept() Q_DECL_OVERRIDE;
